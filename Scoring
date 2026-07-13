@@ -1,0 +1,42 @@
+import random
+
+def choose players():
+    pass
+
+def read_scores():
+    with open('saved_scores.txt', 'r') as f:
+        saved_scores = {}
+        for line in f:
+            player, score = line.strip().split(':')
+            saved_scores[player] = int(score)
+        session_scores = saved_scores.copy()
+    return saved_scores, session_scores
+
+
+def wager(player, bet_amount, session_scores[player]):
+    if bet_amount > session_scores[player]:
+        roulette(player)
+    else:
+        session_scores[player] -= bet_amount
+        return session_scores[player], bet_amount
+
+def roulette(player):
+    print('player loads 5 blanks, 1 live and spins it')
+    if random.randint(1, 6) == 1:
+        print(f"{player} has died")
+    else:
+        print(f"{player} has survived and is back to a score of 5")
+        saved_scores[player] = 5
+
+
+def cashout(player, session_scores[player]):
+    if player in saved_scores and saved_scores[player] < session_scores[player]:
+        saved_scores[player] = session_scores[player]
+
+def write_scores():
+    with open('saved_scores.txt', 'w') as f:
+        for player, score in saved_scores.items():
+            f.write(f"{player}:{score}\n")
+
+
+
