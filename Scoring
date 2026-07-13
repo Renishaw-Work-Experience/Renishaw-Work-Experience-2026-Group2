@@ -1,42 +1,109 @@
 import random
 
-def choose players():
-    pass
+# Need to account for dealer scores as well as player scores throughout
 
+#Idk if we should have logins and passwords or not
+#This might need to change alot later for maybe a 2nd file for passwords etc
+#these 2 functions work together to get a set of names to play the game
+def player_count_input():
+    while True:
+        try:           
+            player_amount = int(input('How many players (must be 2 or more): ')) 
+            if player_amount < 2:
+                print('Must be 2 or more')
+    except ValueError:
+        print('Input a valid integer')
+    return player_amount()
+
+def choose_players():
+    global players
+    global saved_players
+    players = []
+    player_amount = player_count_input()
+    for player in saved_players: print(saved_player)
+    print(f"""Please input the name of one of the players listed to play
+as that account or use a name not shown to create a new account.
+Also keep in mind that player 1 will be the dealer.""")
+    i = 0                 
+    while i < (player_amount):
+        next_player = input('Input the name of the next player').strip()
+        if next_player in players:
+            print('Please do not use the name of a player that you have just used')
+        else:
+            players.append(next_player)
+            if i == 0:
+                dealer = player
+                print(f"{player} will be the dealer")
+            i += 1
+    session_scores = dict.fromkeys(players, 10)
+    print('every player has been granted 10 tokens to start')
+
+
+# Reads from file and creates 2 dictionaries for highscores and a changing one for current score
+# Idk if we should use lots of global variables like I have or I could change it to use parameters
 def read_scores():
+    global session_scores
+    global saved_scores
+    global saved_players
     with open('saved_scores.txt', 'r') as f:
         saved_scores = {}
+        saved_players= []
         for line in f:
             player, score = line.strip().split(':')
+            saved_players.append(player)
             saved_scores[player] = int(score)
         session_scores = saved_scores.copy()
-    return saved_scores, session_scores
+        
+
+#Idk if we should have something for every player to indivually bet or just iterate through every player but I did the individual one
+def wager(player):
+    global bet_amounts
+    bet_amounts = {}
+    while True:
+        try:           
+            bet_amounts[player] = int(input('How much would you like to wager: ')) 
+            if bet_amounts[player] > session_scores[player]:
+                print(f"You have {session_scores[player] tokens, you cannot bet {bet_amounts[player]}")
+            elif bet_amounts[player] < 0:
+                print('Cannot bet a negative number')
+            else:
+                session_scores[player] -= bet_amounts[player]
+                break
+        except ValueError:
+            print('Input a valid integer')
 
 
-def wager(player, bet_amount, session_scores[player]):
-    if bet_amount > session_scores[player]:
-        roulette(player)
-    else:
-        session_scores[player] -= bet_amount
-        return session_scores[player], bet_amount
+# adds bet_amount*2 to the player's score
+def win(player):
+    session_scores[player] += bet_amounts[player]*2
 
-def roulette(player):
-    print('player loads 5 blanks, 1 live and spins it')
-    if random.randint(1, 6) == 1:
-        print(f"{player} has died")
-    else:
-        print(f"{player} has survived and is back to a score of 5")
-        saved_scores[player] = 5
-
-
-def cashout(player, session_scores[player]):
+    
+# sets session score to be saved as a current score - could code an input for the cashout
+def cashout(player):
+    global saved_scores
     if player in saved_scores and saved_scores[player] < session_scores[player]:
         saved_scores[player] = session_scores[player]
+    session_scores[player] = 10
 
-def write_scores():
+
+# writes the saved highscores into the scores file in order
+def write_scores():    
+    sorted_scores = sort_dict_by_value(saved_scores).items()
     with open('saved_scores.txt', 'w') as f:
-        for player, score in saved_scores.items():
-            f.write(f"{player}:{score}\n")
+        for player, score in sorted_scores.items()
+        f.write(f"{player}:{score}\n")
+
+def sort_dict_by_value(dict1):
+    list1 =[]
+    for key, val in dict1.items():
+        list1.append((val,key))
+    list1.sort()
+    dict2 = {}
+    for val, key in list1:
+        dict2[key] = val
+    return dict2
+
+
 
 
 
