@@ -1,4 +1,3 @@
-
 import random
 
 
@@ -13,11 +12,12 @@ playerHand = []
 dealertokens = 10
 playertokens = 10
 
+random.shuffle(deck)
+
 def drawcard():
     card = deck.pop()
     print(f"You drew: {card}")
     return card
-random.shuffle(deck)
 
 def calculateHandValue(hand):
     value = 0
@@ -56,23 +56,34 @@ for x in range(2):
 
 
 
-#Player turns Hit/Stand
+#main game loop
 displayHands()
-playerChoice = input("Would you like to hit or stand? (h/s): ").lower()
-if playerChoice == "h":
-    playerHand.append(drawcard())
-    calculateHandValue(playerHand)
-    displayHands()
-elif playerChoice == "s":
-    print("Player chose to stand.")
-    dealerChoice = input("Dealer, would you like to hit or stand? (h/s): ").lower()
-    if dealerChoice == "h":
-        dealerHand.append(drawcard())
-        calculateHandValue(dealerHand)
+
+while True:
+    playerChoice = input("Would you like to hit or stand? (h/s): ").lower()
+    if playerChoice == "h":
+        playerHand.append(drawcard())
         displayHands()
-    elif dealerChoice == "s":
-        print("Dealer chose to stand.")
-  
+        score = calculateHandValue(playerHand)
+        if score > 21:
+            print("Player busts! Dealer wins.")
+            break
+        
+    elif playerChoice == "s":
+        print("Player chose to stand.")
+        while True:
+            dealerChoice = input("Dealer, would you like to hit or stand? (h/s): ").lower()
+            if dealerChoice == "h":
+                dealerHand.append(drawcard())
+                calculateHandValue(dealerHand)
+                displayHands()
+                score = calculateHandValue(playerHand)
+            if score > 21:
+                print("Dealer busts! Player wins.")
+                break
+            elif dealerChoice == "s":
+                print("Dealer chose to stand.")
+        
 
 
 
