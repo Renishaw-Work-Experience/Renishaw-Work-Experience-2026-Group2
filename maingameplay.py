@@ -155,6 +155,7 @@ while True:
                 print("Player busts! Dealer wins.")
                 Scoring.win(names[1], sessionscores, dealerwager)
                 Scoring.lose(names[0], sessionscores, playerwager)
+                cashout(names[1], sessionscores)
                 break
 
         elif playerChoice == "s":
@@ -170,6 +171,7 @@ while True:
                         print("Dealer busts! Player wins.")
                         Scoring.win(names[0], sessionscores, playerwager)
                         Scoring.lose(names[1], sessionscores, dealerwager)
+                        cashout(names[1], sessionscores)
                         break
                 elif dealerChoice == "s":
                     print("Dealer chose to stand.")
