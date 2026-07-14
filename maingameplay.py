@@ -14,10 +14,14 @@ playertokens = 10
 
 random.shuffle(deck)
 
-def drawcard():
-    card = deck.pop()
-    print(f"You drew: {card}")
-    return card
+def drawcard(player):
+    if player == "Dealer":
+        card = deck.pop()
+        return card
+    elif player == "Player":
+        card = deck.pop()
+        print(f"Player drew: {card}")
+        return card
 
 def calculateHandValue(hand):
     value = 0
@@ -40,19 +44,46 @@ def displayHands():
     print(f"Player's hand: {playerHand}")
     print(f"Player's score: {calculateHandValue(playerHand)}")
 
+def determineWinner():
+    playerScore = calculateHandValue(playerHand)
+    dealerScore = calculateHandValue(dealerHand)
+
+    if playerScore > dealerScore:
+        print("Player wins!")
+    elif dealerScore > playerScore:
+        print("Dealer wins!")
+    else:
+        print("It's a tie!")
+
 while True:
     try:
+        print("Debug try")
         dealerWager = int(input("Dealer, how many tokens would you like to wager? "))
-        dealertokens -= int(dealerWager)
+        if dealerWager > dealertokens or dealerWager <= 0:
+            print("Invalid wager. Please enter a valid number of tokens.")
+        else:
+            print("Debug else")
+            dealertokens -= int(dealerWager)
+            break
+        
+    except:
+        print("Debug catch")
+        print("Invalid input. Please enter a valid number of tokens.")
+while True:
+    try:
+        playerWager = int(input("Player, how many tokens would you like to wager? "))
+        if playerWager > playertokens or playerWager <= 0:
+            print("Invalid wager. Please enter a valid number of tokens.")
+            continue
+        playertokens -= int(playerWager)
         break
     except ValueError:
         print("Invalid input. Please enter a valid number of tokens.")
 
 
-
 for x in range(2):    
-    playerHand.append(drawcard())
-    dealerHand.append(drawcard())
+    playerHand.append(drawcard("Player"))
+    dealerHand.append(drawcard("Dealer"))
 
 
 
@@ -62,7 +93,7 @@ displayHands()
 while True:
     playerChoice = input("Would you like to hit or stand? (h/s): ").lower()
     if playerChoice == "h":
-        playerHand.append(drawcard())
+        playerHand.append(drawcard("Player"))
         displayHands()
         score = calculateHandValue(playerHand)
         if score > 21:
@@ -74,7 +105,7 @@ while True:
         while True:
             dealerChoice = input("Dealer, would you like to hit or stand? (h/s): ").lower()
             if dealerChoice == "h":
-                dealerHand.append(drawcard())
+                dealerHand.append(drawcard("Dealer"))
                 calculateHandValue(dealerHand)
                 displayHands()
                 score = calculateHandValue(playerHand)
@@ -83,8 +114,9 @@ while True:
                 break
             elif dealerChoice == "s":
                 print("Dealer chose to stand.")
+                break
         
-
+determineWinner()
 
 
 
