@@ -1,22 +1,23 @@
+import random
 # Idk if we should have logins and passwords or not
 # these 2 functions work together to get a set of names to play the game
-#def player_count_input():
-    #while True:
-        #try:
-            #player_amount = int(input("How many players (must be 2 or more): "))
-           # if player_amount < 2:
-               # print("Must be 2 or more")
-            #else:
-                #return player_amount
-       # except ValueError:
-           # print("Input a valid integer")
+def player_count_input():
+    while True:
+        try:
+            player_amount = int(input("How many players (must be 2 or more): "))
+            if player_amount < 2:
+                print("Must be 2 or more")
+            else:
+                return player_amount
+        except ValueError:
+            print("Input a valid integer")
 
 
 def set_players():
     high_scores = read_scores()
     saved_players = list(high_scores.keys())
     players = []
-    player_amount = 2  # Default player amount
+    player_amount = player_count_input() 
     print("Players who have played before: ")
     for saved_player in saved_players:
         print(saved_player)
@@ -28,6 +29,8 @@ Also keep in mind that player 1 will be the dealer.""")
         next_player = input("Input the name of the next player: ").strip()
         if next_player in players:
             print("Please do not use the name of a player that you have just used")
+        elif ':' in nextplayer:
+            print('No colons in names')
         else:
             players.append(next_player)
             if i == 0:
@@ -51,28 +54,57 @@ def read_scores():
 
 # Idk if we should have something for every player to indivually bet or just iterate through
 # every player but I did the individual one
-def wager(player, session_scores, bet_amounts):
-    while True:
-        try:
-            bet_amounts[player] = int(input(f"How much would {player} like to wager: "))
-            if bet_amounts[player] > session_scores[player]:
-                print(f"{player} has {session_scores[player]} tokens, they cannot bet {bet_amounts[player]}")
-            elif bet_amounts[player] < 0:
-                print(f"{player} cannot bet a negative number")
-            else:
-                session_scores[player] -= bet_amounts[player]
-                return bet_amounts
-        except ValueError:
-            print(f"{player}, please input a valid integer")
+def wager(session_scores, bet_amounts):
+    names = list(sessionscores.keys())
+    playernames = names.del(0)
+    for player in playernames:
+        while True:
+            try:
+                bet_amounts[player] = int(input(f"How much would {player} like to wager: "))
+                if bet_amounts[player] > session_scores[player]:
+                    print(f"{player} has {session_scores[player]} tokens, they cannot bet {bet_amounts[player]}")
+                elif bet_amounts[player] < 0:
+                    print(f"{player} cannot bet a negative number")
+                elif bet_amounts[player] == 0:
+                    print('you have to gamble!')
+                    if session_scores[player] == 0:
+                        print('Oh....')
+                        if roulette(player):
+                            names.remove(player)
+                            if len(playernames == 0):
+                                cashout(names[0], session_scores)
+                                exit('Too many people died')
+                        else:
+                            bet_amounts[player] = 1
+                else:
+                    session_scores[player] -= bet_amounts[player]
+                    break
+            except ValueError:
+                print(f"please input a valid integer")
+        hands = dict.fromkeys(names, [])
+        return bet_amounts, hands
+
+def roulette(player):
+    print(f"{player} loads 5 blanks, 1 live and spins it")
+    if random.randint(1, 6) == 1:
+        print(f"{player} has died")
+        return True
+    else:
+        print(f"{player} has survived and will now bet 1")
+        return False
 
 
 # adds bet_amount*2 to the player's score
 def win(player, session_scores, bet_amounts):
     session_scores[player] += bet_amounts[player] * 2
+    session_scores[dealer] -= bet_amounts[player] * 2
 
 
 def lose(player, session_scores, bet_amounts):
-    session_scores[player] -= bet_amounts[player]
+    session_scores[dealer] += bet_amounts[player] * 2
+    session_scores[player] -= bet_amounts[player] * 2
+
+
 
 
 # sets session score to be saved as a current score - could code an input for the cashout
