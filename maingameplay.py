@@ -5,7 +5,7 @@ deck = [
     "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "sj", "sq", "sk", "sa",
     "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "h10", "hj", "hq", "hk", "ha",
     "c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj", "cq", "ck", "ca",
-    "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10", "d", "dq", "dk", "da"
+    "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10", "dj", "dq", "dk", "da"
 ]
 dealerHand = []
 playerHand = []
@@ -57,17 +57,14 @@ def determineWinner():
 
 while True:
     try:
-        print("Debug try")
         dealerWager = int(input("Dealer, how many tokens would you like to wager? "))
         if dealerWager > dealertokens or dealerWager <= 0:
             print("Invalid wager. Please enter a valid number of tokens.")
         else:
-            print("Debug else")
             dealertokens -= int(dealerWager)
             break
         
     except:
-        print("Debug catch")
         print("Invalid input. Please enter a valid number of tokens.")
 while True:
     try:
@@ -108,15 +105,14 @@ while True:
                 dealerHand.append(drawcard("Dealer"))
                 calculateHandValue(dealerHand)
                 displayHands()
-                score = calculateHandValue(playerHand)
+                score = calculateHandValue(dealerHand)
             if score > 21:
                 print("Dealer busts! Player wins.")
                 break
             elif dealerChoice == "s":
                 print("Dealer chose to stand.")
+                determineWinner()
                 break
-        
-determineWinner()
 
 
 
