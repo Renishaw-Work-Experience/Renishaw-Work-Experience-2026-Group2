@@ -11,8 +11,8 @@ def player_count_input():
             player_amount = int(input('How many players (must be 2 or more): ')) 
             if player_amount < 2:
                 print('Must be 2 or more')
-    except ValueError:
-        print('Input a valid integer')
+        except ValueError:
+            print('Input a valid integer')
     return player_amount()
 
 def choose_players():
@@ -64,7 +64,7 @@ def wager(player):
         try:           
             bet_amounts[player] = int(input('How much would you like to wager: ')) 
             if bet_amounts[player] > session_scores[player]:
-                print(f"You have {session_scores[player] tokens, you cannot bet {bet_amounts[player]}")
+                print(f"You have {session_scores[player]} tokens, you cannot bet {bet_amounts[player]}")
             elif bet_amounts[player] < 0:
                 print('Cannot bet a negative number')
             else:
@@ -94,8 +94,8 @@ def cashout(player):
 def write_scores():    
     sorted_scores = sort_dict_by_value(high_scores).items()
     with open('saved_scores.txt', 'w') as f:
-        for player, score in sorted_scores.items()
-        f.write(f"{player}:{score}\n")
+        for player, score in sorted_scores.items():
+            f.write(f"{player}:{score}\n")
 
 def sort_dict_by_value(dict1):
     list1 =[]
