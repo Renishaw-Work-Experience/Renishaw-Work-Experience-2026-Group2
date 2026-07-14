@@ -1,6 +1,6 @@
 import random
 
-# Need to account for dealer scores as well as player scores throughout
+
 
 #Idk if we should have logins and passwords or not
 #This might need to change alot later for maybe a 2nd file for passwords etc
@@ -32,7 +32,7 @@ Also keep in mind that player 1 will be the dealer.""")
         else:
             players.append(next_player)
             if i == 0:
-                dealer = player
+                dealer = next_player
                 print(f"{player} will be the dealer")
             i += 1
     session_scores = dict.fromkeys(players, 10)
@@ -43,19 +43,20 @@ Also keep in mind that player 1 will be the dealer.""")
 # Idk if we should use lots of global variables like I have or I could change it to use parameters
 def read_scores():
     global session_scores
-    global saved_scores
+    global high_scores
     global saved_players
     with open('saved_scores.txt', 'r') as f:
-        saved_scores = {}
+        high_scores = {}
         saved_players= []
         for line in f:
             player, score = line.strip().split(':')
             saved_players.append(player)
-            saved_scores[player] = int(score)
-        session_scores = saved_scores.copy()
+            high_scores[player] = int(score)
+        session_scores = high_scores.copy()
         
 
-#Idk if we should have something for every player to indivually bet or just iterate through every player but I did the individual one
+#Idk if we should have something for every player to indivually bet or just iterate through
+# every player but I did the individual one
 def wager(player):
     global bet_amounts
     bet_amounts = {}
@@ -77,18 +78,21 @@ def wager(player):
 def win(player):
     session_scores[player] += bet_amounts[player]*2
 
+def lose(player):
+    session_scores[player] -= bet_amounts[player]
+
     
 # sets session score to be saved as a current score - could code an input for the cashout
 def cashout(player):
-    global saved_scores
-    if player in saved_scores and saved_scores[player] < session_scores[player]:
-        saved_scores[player] = session_scores[player]
+    global high_scores
+    if player in high_scores and high_scores[player] < session_scores[player]:
+        high_scores[player] = session_scores[player]
     session_scores[player] = 10
 
 
 # writes the saved highscores into the scores file in order
 def write_scores():    
-    sorted_scores = sort_dict_by_value(saved_scores).items()
+    sorted_scores = sort_dict_by_value(high_scores).items()
     with open('saved_scores.txt', 'w') as f:
         for player, score in sorted_scores.items()
         f.write(f"{player}:{score}\n")
