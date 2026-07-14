@@ -57,10 +57,9 @@ deck = [
 ]
 dealerHand = []
 playerHand = []
-dealertokens = 10
-playertokens = 10
 
-random.shuffle(deck)
+
+
 
 
 def drawcard(player):
@@ -92,6 +91,7 @@ def calculateHandValue(hand):
 
 def displayHands():
     print(f"Dealer's hand: {dealerHand[1]}")
+    print(f"Dealer's score: {calculateHandValue(dealerHand)}")
     print(f"Player's hand: {playerHand}")
     print(f"Player's score: {calculateHandValue(playerHand)}")
 
@@ -102,68 +102,78 @@ def determineWinner():
 
     if playerScore > dealerScore:
         print("Player wins!")
+        Scoring.win(names[0], sessionscores, playerwager)
+        Scoring.lose(names[1], sessionscores, dealerwager)
+        
     elif dealerScore > playerScore:
         print("Dealer wins!")
+        Scoring.win(names[1], sessionscores, dealerwager)
+        Scoring.lose(names[0], sessionscores, playerwager)
+        
     else:
         print("It's a tie!")
+    
 
+    if cashout(names[1], sessionscores):
+        print("Thanks for ending the game. Your score has been saved.")
+        exit()
 
+        
+
+def cashout(player, sessionscores):
+    print(f"{player} now has {sessionscores[player]} tokens.")
+    choice = input(f"{player}, would you like to cash out? (y/n): ").lower()
+    if choice == "y":
+        Scoring.cashout(player, sessionscores)
+        print(f"{player} has cashed out. Their score has been saved.")
+        return True
+    else:
+        print(f"{player} has chosen not to cash out.")
+        return False
+    
+
+sessionscores = Scoring.set_players()
+names = list(sessionscores.keys())
 while True:
-    try:
-        dealerWager = int(input("Dealer, how many tokens would you like to wager? "))
-        if dealerWager > dealertokens or dealerWager <= 0:
-            print("Invalid wager. Please enter a valid number of tokens.")
-        else:
-            dealertokens -= int(dealerWager)
-            break
-
-    except:
-        print("Invalid input. Please enter a valid number of tokens.")
-while True:
-    try:
-        playerWager = int(input("Player, how many tokens would you like to wager? "))
-        if playerWager > playertokens or playerWager <= 0:
-            print("Invalid wager. Please enter a valid number of tokens.")
-            continue
-        playertokens -= int(playerWager)
-        break
-    except ValueError:
-        print("Invalid input. Please enter a valid number of tokens.")
-
-
-for x in range(2):
-    playerHand.append(drawcard("Player"))
-    dealerHand.append(drawcard("Dealer"))
-
-
-# main game loop
-displayHands()
-
-while True:
-    playerChoice = input("Would you like to hit or stand? (h/s): ").lower()
-    if playerChoice == "h":
+    playerwager = Scoring.wager(names[0], sessionscores, {})
+    dealerwager = Scoring.wager(names[1], sessionscores, {})
+    for x in range(2):
         playerHand.append(drawcard("Player"))
-        displayHands()
-        score = calculateHandValue(playerHand)
-        if score > 21:
-            print("Player busts! Dealer wins.")
-            break
+        dealerHand.append(drawcard("Dealer"))
 
-    elif playerChoice == "s":
-        print("Player chose to stand.")
-        while True:
-            dealerChoice = input(
-                "Dealer, would you like to hit or stand? (h/s): "
-            ).lower()
-            if dealerChoice == "h":
-                dealerHand.append(drawcard("Dealer"))
-                calculateHandValue(dealerHand)
-                displayHands()
-                score = calculateHandValue(dealerHand)
+
+    # main game loop
+    displayHands()
+
+    while True:
+        playerChoice = input("Would you like to hit or stand? (h/s): ").lower()
+        if playerChoice == "h":
+            playerHand.append(drawcard("Player"))
+            displayHands()
+            score = calculateHandValue(playerHand)
             if score > 21:
-                print("Dealer busts! Player wins.")
+                print("Player busts! Dealer wins.")
+                Scoring.win(names[1], sessionscores, dealerwager)
+                Scoring.lose(names[0], sessionscores, playerwager)
+                cashout(names[1], sessionscores)
                 break
-            elif dealerChoice == "s":
-                print("Dealer chose to stand.")
-                determineWinner()
-                break
+
+        elif playerChoice == "s":
+            print("Player chose to stand.")
+            while True:
+                dealerChoice = input("Dealer, would you like to hit or stand? (h/s): ").lower()
+                if dealerChoice == "h":
+                    dealerHand.append(drawcard("Dealer"))
+                    calculateHandValue(dealerHand)
+                    displayHands()
+                    score = calculateHandValue(dealerHand)
+                    if score > 21:
+                        print("Dealer busts! Player wins.")
+                        Scoring.win(names[0], sessionscores, playerwager)
+                        Scoring.lose(names[1], sessionscores, dealerwager)
+                        cashout(names[1], sessionscores)
+                        break
+                elif dealerChoice == "s":
+                    print("Dealer chose to stand.")
+                    determineWinner()
+                    break
