@@ -134,52 +134,58 @@ def cashout(player, sessionscores):
         return False
     
 
-sessionscores = Scoring.set_players()
-names = list(sessionscores.keys())
-while True:
-    init_game()
-    print('A new round will now begin\n')
-    playerwager = Scoring.wager(names[1], sessionscores)
-    dealerwager = Scoring.wager(names[0], sessionscores)
-    for x in range(2):
-        playerHand.append(drawcard("Player"))
-        dealerHand.append(drawcard("Dealer"))
-
-
-    # main game loop
-    displayHands()
+def main():
+    global sessionscores, names, playerwager, dealerwager
+    sessionscores = Scoring.set_players()
+    names = list(sessionscores.keys())
 
     while True:
-        playerChoice = input(f"{names[1]}, would you like to hit or stand? (h/s): ").lower()
-        if playerChoice == "h":
+        init_game()
+        print('A new round will now begin\n')
+        playerwager = Scoring.wager(names[1], sessionscores)
+        dealerwager = Scoring.wager(names[0], sessionscores)
+        for x in range(2):
             playerHand.append(drawcard("Player"))
-            displayHands()
-            score = calculateHandValue(playerHand)
-            if score > 21:
-                print(f"{names[1]} busts! Dealer ({names[0]}) wins.")
-                Scoring.win(names[0], sessionscores, dealerwager)
-                cashout(names[0], sessionscores)
-                break
+            dealerHand.append(drawcard("Dealer"))
 
-        elif playerChoice == "s":
-            print(f"{names[1]} chose to stand.")
-            print(f"Dealer's ({names[0]}'s) hand: {dealerHand}")
-            print(f"Dealer's ({names[0]}'s) score: {calculateHandValue(dealerHand)}")
-            while True:
-                dealerChoice = input(f"{names[0]}, would you like to hit or stand? (h/s): ").lower()
-                if dealerChoice == "h":
-                    dealerHand.append(drawcard("Dealer"))
-                    calculateHandValue(dealerHand)
-                    score = calculateHandValue(dealerHand)
-                    print(f"Dealer's ({names[0]}'s) hand: {dealerHand}")
-                    print(f"Dealer's ({names[0]}'s) score: {calculateHandValue(dealerHand)}")
-                    if score > 21:
-                        print(f"Dealer ({names[0]}) busts! {names[1]} wins.")
-                        Scoring.win(names[1], sessionscores, playerwager)
-                    
-                        cashout(names[1], sessionscores)
-                        break
-                elif dealerChoice == "s":
-                    print(f"Dealer ({names[0]}) chose to stand.")
-                    determineWinner()
+        # main game loop
+        displayHands()
+
+        while True:
+            playerChoice = input(f"{names[1]}, would you like to hit or stand? (h/s): ").lower()
+            if playerChoice == "h":
+                playerHand.append(drawcard("Player"))
+                displayHands()
+                score = calculateHandValue(playerHand)
+                if score > 21:
+                    print(f"{names[1]} busts! Dealer ({names[0]}) wins.")
+                    Scoring.win(names[0], sessionscores, dealerwager)
+                    cashout(names[0], sessionscores)
                     break
+
+            elif playerChoice == "s":
+                print(f"{names[1]} chose to stand.")
+                print(f"Dealer's ({names[0]}'s) hand: {dealerHand}")
+                print(f"Dealer's ({names[0]}'s) score: {calculateHandValue(dealerHand)}")
+                while True:
+                    dealerChoice = input(f"{names[0]}, would you like to hit or stand? (h/s): ").lower()
+                    if dealerChoice == "h":
+                        dealerHand.append(drawcard("Dealer"))
+                        calculateHandValue(dealerHand)
+                        score = calculateHandValue(dealerHand)
+                        print(f"Dealer's ({names[0]}'s) hand: {dealerHand}")
+                        print(f"Dealer's ({names[0]}'s) score: {calculateHandValue(dealerHand)}")
+                        if score > 21:
+                            print(f"Dealer ({names[0]}) busts! {names[1]} wins.")
+                            Scoring.win(names[1], sessionscores, playerwager)
+
+                            cashout(names[1], sessionscores)
+                            break
+                    elif dealerChoice == "s":
+                        print(f"Dealer ({names[0]}) chose to stand.")
+                        determineWinner()
+                        break
+
+
+if __name__ == "__main__":
+    main()

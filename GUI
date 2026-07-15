@@ -1,4 +1,6 @@
 import pygame
+import maingameplay
+
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption("BlackJack")
