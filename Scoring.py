@@ -56,9 +56,11 @@ def read_scores():
 # every player but I did the individual one
 def wager(session_scores):
     names = list(session_scores.keys())
-    bet_amounts = dict.fromkeys(names, 0)
     playernames = names.copy()
-    playernames.remove(names[0])  # Remove the dealer
+    playernames.remove(names[0]) 
+    bet_amounts = {}
+    for name in playernames:
+        bet_amounts[name] = 0  
     for player in playernames:
         while True:
             try:
@@ -70,12 +72,11 @@ def wager(session_scores):
                 elif bet_amounts[player] == 0:
                     print('you have to gamble!')
                     if session_scores[player] == 0:
-                        print('Oh....')
-                        if roulette(player):
-                            names.remove(player)
-                            if len(playernames) == 0:
-                                cashout(names[0], session_scores)
-                                exit('Too many people died')
+                        print(f"{player} has no tokens left and will be removed from the game")
+                        names.remove(player)
+                        if len(playernames) == 0:
+                            cashout(names[0], session_scores)
+                            exit('Too many people died, the last player has cashed out')
                         else:
                             bet_amounts[player] = 1
                 else:
@@ -83,17 +84,11 @@ def wager(session_scores):
                     break
             except ValueError:
                 print(f"please input a valid integer")
-        hands = dict.fromkeys(names, [])
+        hands = {}
+        for name in names:
+            hands[name] = []
+        print(hands)
         return bet_amounts, hands
-
-def roulette(player):
-    print(f"{player} loads 5 blanks, 1 live and spins it")
-    if random.randint(1, 6) == 1:
-        print(f"{player} has died")
-        return True
-    else:
-        print(f"{player} has survived and will now bet 1")
-        return False
 
 
 # adds bet_amount*2 to the player's score

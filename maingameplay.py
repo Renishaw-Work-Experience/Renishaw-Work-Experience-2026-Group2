@@ -1,6 +1,6 @@
 import random
 import Scoring
-global deck, hands, names
+
 # graphics
 def drawcard(player):
     card = deck.pop()
@@ -41,7 +41,7 @@ def displayHands(end=False):
                 if names[i] in nonbust:
                     determineWinner(names[i])
         else:
-            print(f"Dealer's faceup card: {hands[names[0]]}")
+            print(f"Dealer's faceup card: {hands[names[0]][0]}")
             print(f"{names[i]}'s hand: {hands[names[i]]}")
             print(f"{names[i]}'s score: {calculateHandValue(hands[names[i]])}")
 
@@ -80,6 +80,7 @@ def cashout(player, sessionscores):
 sessionscores = Scoring.set_players()
 names = list(sessionscores.keys())
 while True:
+    print('A new game will now begin\n')
     deck = [
     "s2",
     "s3",
@@ -133,14 +134,12 @@ while True:
     "dq",
     "dk",
     "da",]
-    random.shuffle(deck)
-    print("Debug shuffle: ", deck)    
+    random.shuffle(deck)   
     nonbust = []
     betamounts, hands = Scoring.wager(sessionscores)
-    for i in range(len(names)): #networking needed
-        drawcard(names[i])
-        drawcard(names[i])
-        print(hands[names[i]])
+    for name in names: #networking needed
+        drawcard(name)
+        drawcard(name)
     displayHands()
     for i in reversed(range(len(names))): #networking needed again
         while True:
