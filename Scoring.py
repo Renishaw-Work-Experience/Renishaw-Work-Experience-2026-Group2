@@ -88,18 +88,12 @@ def cashout(player, session_scores):
 
 # writes the saved highscores into the scores file in order
 def write_scores(high_scores):
-    sorted_scores = sort_dict_by_value(high_scores).items()
+    sorted_scores = sort_dict_by_value(high_scores)
     with open("saved_scores.txt", "w") as f:
         for player, score in sorted_scores:
             f.write(f"{player}:{score}\n")
 
 
 def sort_dict_by_value(dict1):
-    list1 = []
-    for key, val in dict1.items():
-        list1.append((val, key))
-    list1.sort()
-    dict2 = {}
-    for val, key in list1:
-        dict2[key] = val
-    return dict2
+    dict1 = {k: v for k, v in sorted(dict1.items(), key=lambda item: item[1], reverse=True)}
+    return dict1

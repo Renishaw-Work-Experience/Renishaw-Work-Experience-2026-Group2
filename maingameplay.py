@@ -71,7 +71,7 @@ def drawcard(player):
         return card
     elif player == "Player":
         card = deck.pop()
-        print(f"Player drew: {card}")
+        print(f"{names[1]} drew: {card}")
         return card
 
 
@@ -93,9 +93,9 @@ def calculateHandValue(hand):
 
 
 def displayHands():
-    print(f"Dealer's hand: {dealerHand[0]} and [hidden]")
-    print(f"Player's hand: {playerHand}")
-    print(f"Player's score: {calculateHandValue(playerHand)}")
+    print(f"Dealer's ({names[0]}'s) hand: {dealerHand[0]} and [hidden]")
+    print(f"{names[1]}'s hand: {playerHand}")
+    print(f"{names[1]}'s score: {calculateHandValue(playerHand)}")
 
 
 def determineWinner():
@@ -103,12 +103,12 @@ def determineWinner():
     dealerScore = calculateHandValue(dealerHand)
 
     if playerScore > dealerScore:
-        print("Player wins!")
+        print(f"{names[1]} wins!")
         Scoring.win(names[1], sessionscores, playerwager)
         
         
     elif dealerScore > playerScore:
-        print("Dealer wins!")
+        print(f"Dealer ({names[0]}) wins!")
         Scoring.win(names[0], sessionscores, dealerwager)
         
         
@@ -149,34 +149,36 @@ while True:
     displayHands()
 
     while True:
-        playerChoice = input("Would you like to hit or stand? (h/s): ").lower()
+        playerChoice = input(f"{names[1]}, would you like to hit or stand? (h/s): ").lower()
         if playerChoice == "h":
             playerHand.append(drawcard("Player"))
             displayHands()
             score = calculateHandValue(playerHand)
             if score > 21:
-                print("Player busts! Dealer wins.")
+                print(f"{names[1]} busts! Dealer ({names[0]}) wins.")
                 Scoring.win(names[0], sessionscores, dealerwager)
                 cashout(names[0], sessionscores)
                 break
 
         elif playerChoice == "s":
-            print("Player chose to stand.")
-            print(f"Dealer's hand: {dealerHand}")
-            print(f"Dealer's score: {calculateHandValue(dealerHand)}")
+            print(f"{names[1]} chose to stand.")
+            print(f"Dealer's ({names[0]}'s) hand: {dealerHand}")
+            print(f"Dealer's ({names[0]}'s) score: {calculateHandValue(dealerHand)}")
             while True:
-                dealerChoice = input("Dealer, would you like to hit or stand? (h/s): ").lower()
+                dealerChoice = input(f"{names[0]}, would you like to hit or stand? (h/s): ").lower()
                 if dealerChoice == "h":
                     dealerHand.append(drawcard("Dealer"))
                     calculateHandValue(dealerHand)
                     score = calculateHandValue(dealerHand)
+                    print(f"Dealer's ({names[0]}'s) hand: {dealerHand}")
+                    print(f"Dealer's ({names[0]}'s) score: {calculateHandValue(dealerHand)}")
                     if score > 21:
-                        print("Dealer busts! Player wins.")
+                        print(f"Dealer ({names[0]}) busts! {names[1]} wins.")
                         Scoring.win(names[1], sessionscores, playerwager)
                     
                         cashout(names[1], sessionscores)
                         break
                 elif dealerChoice == "s":
-                    print("Dealer chose to stand.")
+                    print(f"Dealer ({names[0]}) chose to stand.")
                     determineWinner()
                     break
