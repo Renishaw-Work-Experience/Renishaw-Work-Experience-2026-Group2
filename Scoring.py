@@ -70,25 +70,23 @@ def wager(session_scores):
                 elif bet_amounts[player] < 0:
                     print(f"{player} cannot bet a negative number")
                 elif bet_amounts[player] == 0:
-                    print('you have to gamble!')
+                    print('You have to gamble!')
                     if session_scores[player] == 0:
-                        print(f"{player} has no tokens left and will be removed from the game")
+                        print(f"But {player} has no tokens left and will be removed from the game")
                         names.remove(player)
                         if len(playernames) == 0:
                             cashout(names[0], session_scores)
                             exit('Too many people died, the last player has cashed out')
-                        else:
-                            bet_amounts[player] = 1
                 else:
                     session_scores[player] -= bet_amounts[player]
+                    session_scores[names[0]] += bet_amounts[player]
                     break
             except ValueError:
                 print(f"please input a valid integer")
         hands = {}
         for name in names:
             hands[name] = []
-        print(hands)
-        return bet_amounts, hands
+    return bet_amounts, hands
 
 
 # adds bet_amount*2 to the player's score
@@ -98,10 +96,10 @@ def win(player, session_scores, bet_amounts):
     session_scores[names[0]] -= bet_amounts[player] * 2
 
 
-def lose(player, session_scores, bet_amounts):
+def push(player, session_scores, bet_amounts):
     names = list(session_scores.keys())
-    session_scores[names[0]] += bet_amounts[player] * 2
-    session_scores[player] -= bet_amounts[player] * 2
+    session_scores[player] += bet_amounts[player]
+    session_scores[names[0]] -= bet_amounts[player]
 
 
 
