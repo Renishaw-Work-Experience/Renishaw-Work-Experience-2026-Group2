@@ -51,28 +51,27 @@ def read_scores():
 
 # Idk if we should have something for every player to indivually bet or just iterate through
 # every player but I did the individual one
-def wager(player, session_scores, bet_amounts):
+def wager(player, session_scores):
     while True:
         try:
-            bet_amounts[player] = int(input(f"How much would {player} like to wager: "))
-            if bet_amounts[player] > session_scores[player]:
-                print(f"{player} has {session_scores[player]} tokens, they cannot bet {bet_amounts[player]}")
-            elif bet_amounts[player] < 0:
+            wager = int(input(f"How much would {player} like to wager: "))
+            if wager > session_scores[player]:
+                print(f"{player} has {session_scores[player]} tokens, they cannot bet {str(wager)}")
+            elif wager < 0:
                 print(f"{player} cannot bet a negative number")
             else:
-                session_scores[player] -= bet_amounts[player]
-                return bet_amounts
+                session_scores[player] -= wager
+                return wager
         except ValueError:
             print(f"{player}, please input a valid integer")
 
 
 # adds bet_amount*2 to the player's score
-def win(player, session_scores, bet_amounts):
-    session_scores[player] += bet_amounts[player] * 2
+def win(player, session_scores, wager):
+    session_scores[player] = int(session_scores[player]) + (int(wager) * 2)
 
 
-def lose(player, session_scores, bet_amounts):
-    session_scores[player] -= bet_amounts[player]
+
 
 
 # sets session score to be saved as a current score - could code an input for the cashout
