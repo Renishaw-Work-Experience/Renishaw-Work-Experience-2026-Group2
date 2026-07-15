@@ -28,6 +28,8 @@ Also keep in mind that player 1 will be the dealer.""")
         next_player = input("Input the name of the next player: ").strip()
         if next_player in players:
             print("Please do not use the name of a player that you have just used")
+        elif ':' in next_player:
+            print("Please do not use a colon in your name")
         else:
             players.append(next_player)
             if i == 0:
@@ -35,7 +37,7 @@ Also keep in mind that player 1 will be the dealer.""")
                 print(f"{dealer} will be the dealer")
             i += 1
     session_scores = dict.fromkeys(players, 10)
-    print("every player has been granted 10 tokens to start")
+    print("Every player has been granted 10 tokens to start")
     return session_scores
 
 
@@ -90,7 +92,7 @@ def cashout(player, session_scores):
 def write_scores(high_scores):
     sorted_scores = sort_dict_by_value(high_scores)
     with open("saved_scores.txt", "w") as f:
-        for player, score in sorted_scores:
+        for player, score in sorted_scores.items():
             f.write(f"{player}:{score}\n")
 
 

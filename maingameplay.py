@@ -127,7 +127,7 @@ def cashout(player, sessionscores):
     choice = input(f"{player}, would you like to cash out? (y/n): ").lower()
     if choice == "y":
         Scoring.cashout(player, sessionscores)
-        print(f"{player} has cashed out. Their score has been saved.")
+        print(f"{player} has cashed out. Their score has been saved and reset to 10.")
         return True
     else:
         print(f"{player} has chosen not to cash out.")
@@ -138,6 +138,7 @@ sessionscores = Scoring.set_players()
 names = list(sessionscores.keys())
 while True:
     init_game()
+    print('A new round will now begin\n')
     playerwager = Scoring.wager(names[1], sessionscores)
     dealerwager = Scoring.wager(names[0], sessionscores)
     for x in range(2):
