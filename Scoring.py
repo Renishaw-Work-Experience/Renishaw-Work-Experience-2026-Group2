@@ -29,7 +29,7 @@ Also keep in mind that player 1 will be the dealer.""")
         next_player = input("Input the name of the next player: ").strip()
         if next_player in players:
             print("Please do not use the name of a player that you have just used")
-        elif ':' in nextplayer:
+        elif ':' in next_player:
             print('No colons in names')
         else:
             players.append(next_player)
@@ -54,9 +54,11 @@ def read_scores():
 
 # Idk if we should have something for every player to indivually bet or just iterate through
 # every player but I did the individual one
-def wager(session_scores, bet_amounts):
-    names = list(sessionscores.keys())
-    playernames = names.del(0)
+def wager(session_scores):
+    names = list(session_scores.keys())
+    bet_amounts = dict.fromkeys(names, 0)
+    playernames = names.copy()
+    playernames.remove(names[0])  # Remove the dealer
     for player in playernames:
         while True:
             try:
@@ -71,7 +73,7 @@ def wager(session_scores, bet_amounts):
                         print('Oh....')
                         if roulette(player):
                             names.remove(player)
-                            if len(playernames == 0):
+                            if len(playernames) == 0:
                                 cashout(names[0], session_scores)
                                 exit('Too many people died')
                         else:
@@ -96,12 +98,14 @@ def roulette(player):
 
 # adds bet_amount*2 to the player's score
 def win(player, session_scores, bet_amounts):
+    names = list(session_scores.keys())
     session_scores[player] += bet_amounts[player] * 2
-    session_scores[dealer] -= bet_amounts[player] * 2
+    session_scores[names[0]] -= bet_amounts[player] * 2
 
 
 def lose(player, session_scores, bet_amounts):
-    session_scores[dealer] += bet_amounts[player] * 2
+    names = list(session_scores.keys())
+    session_scores[names[0]] += bet_amounts[player] * 2
     session_scores[player] -= bet_amounts[player] * 2
 
 

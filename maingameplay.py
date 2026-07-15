@@ -1,6 +1,6 @@
 import random
 import Scoring
-
+global deck, hands, names
 # graphics
 def drawcard(player):
     card = deck.pop()
@@ -11,7 +11,7 @@ def drawcard(player):
             print(f"The dealer ({player}) drew {card}")
     else:
         print(f"{player} drew: {card}") #networking needed 
-     hands[player].append(card)
+    hands[player].append(card)
 
 # Possible graphics for playerscores
 def calculateHandValue(hand):
@@ -31,19 +31,19 @@ def calculateHandValue(hand):
     return value
 
 # graphics needed
-def displayHands(end=None):
-    if end:
-        for name in names: # networking needed
-            print(f"Dealer's hand: {hands[names[0]]}")
-            print(f"Dealer's score: {calculateHandValue(hands[names[0]])}")
-            print(f"{names[i]}'s hand: {hands[name]}")
-            print(f"names[i]}'s score: {calculateHandValue(hands[name])}")
-            if name in nonbust:
-                determineWinner(name)
-    else:
-        print(f"Dealer's faceup card: {hands[names][0]}")
-        print(f"{names[i]}'s hand: {hands[names][0]}")
-        print(f"names[i]}'s score: {calculateHandValue(hands[name])}")
+def displayHands(end=False):
+    for i in range(len(names)): # networking needed
+        if end:
+                print(f"Dealer's hand: {hands[names[0]]}")
+                print(f"Dealer's score: {calculateHandValue(hands[names[0]])}")
+                print(f"{names[i]}'s hand: {hands[names[i]]}")
+                print(f"{names[i]}'s score: {calculateHandValue(hands[names[i]])}")
+                if names[i] in nonbust:
+                    determineWinner(names[i])
+        else:
+            print(f"Dealer's faceup card: {hands[names[0]]}")
+            print(f"{names[i]}'s hand: {hands[names[i]]}")
+            print(f"{names[i]}'s score: {calculateHandValue(hands[names[i]])}")
 
 
 # possible win/lose/push(tie) screen
@@ -133,21 +133,23 @@ while True:
     "dq",
     "dk",
     "da",]
-    deck = random.shuffle(deck)
+    random.shuffle(deck)
+    print("Debug shuffle: ", deck)    
     nonbust = []
     betamounts, hands = Scoring.wager(sessionscores)
-    for name in (names): #networking needed
-        drawcard(name)
-        drawcard(name)
+    for i in range(len(names)): #networking needed
+        drawcard(names[i])
+        drawcard(names[i])
+        print(hands[names[i]])
     displayHands()
-    for i in reversed(range(len(names)) #networking needed again
+    for i in reversed(range(len(names))): #networking needed again
         while True:
             if i != 0:
-                playerChoice = input("Would you like to hit or stand? (h/s): ").lower() #button needed to replace choice
+                playerChoice = input(f"Would {names[i]} like to hit or stand? (h/s): ").lower() #button needed to replace choice
                 if playerChoice == "h":
-                    drawcard()
+                    drawcard(names[i])
                     displayHands()
-                    score = calculateHandValue(hands[names[i])
+                    score = calculateHandValue(hands[names[i]])
                     if score > 21:
                         print("Bust!")
                         Scoring.lose(names[i], sessionscores, betamounts)
@@ -160,10 +162,10 @@ while True:
                 while True:
                     dealerChoice = input("Dealer, would you like to hit or stand? (h/s): ").lower() #button needed to replace choice
                     if dealerChoice == "h":
-                        drawcard[names[i]]
-                        calculateHandValue(hands[names[0])
+                        drawcard([names[i]])
+                        calculateHandValue(hands[names[0]])
                         displayHands()
-                        score = calculateHandValue(hands[names[0])
+                        score = calculateHandValue(hands[names[0]])
                         if score > 21:
                             print("Dealer busts! All non-bust players win.")
                             for name in nonbust:
