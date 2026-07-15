@@ -5,13 +5,55 @@ pygame.display.set_caption("BlackJack")
 
 
 scrn = pygame.display.set_mode((600, 800))
-pygame.image.load("BlackJack_Table.jpg")
-scrn.fill((37, 64, 85))
-scrn.blit(pygame.image.load("BlackJack_Table.jpg"), (0, 200))
-pygame.display.flip()
-running = True
-while running:
-    for event in pygame.event.get():
-        pygame.display.update()
+table_img = pygame.image.load("BlackJack_Table.jpg")
+run = True
+hitButton = pygame.image.load("hitbuttonred.png").convert_alpha()
+standButton = pygame.image.load("standbuttonred.png").convert_alpha()
+
+
+class Button:
+    def __init__(self, x, y, image, scale):
+        
+        self.image = pygame.transform.scale(image, (int(image.get_width() * scale), int(image.get_height() * scale)))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.clicked = False
+
+    def draw(self):
+        action = False
+        # get mouse position
+        pos = pygame.mouse.get_pos()
+
+        # check mouseover and clicked conditions
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and not self.clicked:
+                self.clicked = True
+                action = True
+                print("Button clicked!")
+
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+
+        # draw button on screen
+        scrn.blit(self.image, (self.rect.x, self.rect.y))
+
+        return action
+
+def draw_text(text, font_size, color, x, y):
+    font = pygame.font.SysFont(None, font_size)
+    text_surface = font.render(text, True, color)
+    scrn.blit(text_surface, (x, y))
+
+hit_button = Button(50, 600, hitButton, 0.2)
+stand_button = Button(450, 600, standButton, 0.2)
+
+while run:
+    scrn.fill((37, 64, 85))
+    scrn.blit(table_img, (0, 200))
+    for event in pygame.event.get():    
         if event.type == pygame.QUIT:
-            running = False
+            run = False
+    hit_button.draw()
+    stand_button.draw()
+    draw_text("Total: 7", 50, (255, 255, 255), 250, 650)
+    pygame.display.update()    
