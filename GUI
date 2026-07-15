@@ -6,15 +6,15 @@ pygame.display.set_caption("BlackJack")
 
 scrn = pygame.display.set_mode((600, 800))
 table_img = pygame.image.load("BlackJack_Table.jpg")
-dealer_img = pygame.image.load("Dealer.jpg").convert_alpha()
-dealer_img = pygame.transform.scale(dealer_img, (int(dealer_img.get_width() * 0.5), int(dealer_img.get_height() * 0.5)))
+#dealer_img = pygame.image.load("black dealer v2.webp").convert_alpha()
+#dealer_img = pygame.transform.scale(dealer_img, (int(dealer_img.get_width() * 0.5), int(dealer_img.get_height() * 0.5)))
 run = True
 hitButton = pygame.image.load("hitbuttonred.png").convert_alpha()
 standButton = pygame.image.load("standbuttonred.png").convert_alpha()
 blankCard = pygame.image.load("blank card.jpg").convert_alpha()
 blankCard = pygame.transform.scale(blankCard, (int(blankCard.get_width() * 0.2), int(blankCard.get_height() * 0.2)))
-dealer_img = pygame.transform.scale(dealer_img, (int(dealer_img.get_width() * 0.8), int(dealer_img.get_height() * 0.8))) 
-DealerHitCount = 2
+#dealer_img = pygame.transform.scale(dealer_img, (int(dealer_img.get_width() * 0.8), int(dealer_img.get_height() * 0.8))) 
+Player2HitCount = 2
 PlayerHitCount = 2
 
 class Button:
@@ -28,7 +28,7 @@ class Button:
 
     def draw(self):
         global PlayerHitCount
-        global DealerHitCount
+        global Player2HitCount
         action = False
         # get mouse position
         pos = pygame.mouse.get_pos()
@@ -67,13 +67,12 @@ stand_button = Button(450, 600, standButton, 0.2, "stand" )
 while run:
     scrn.fill((37, 64, 85))
     scrn.blit(table_img, (0, 200))
-    scrn.blit(dealer_img, (250, 175))
     
-    for i in range(DealerHitCount):
-        x = 200 + i * 50
-        scrn.blit(blankCard, (x, 100))
+    for i in range(Player2HitCount):
+        x = 0 + i * 50
+        scrn.blit(blankCard, (x, 425))
     for i in range(PlayerHitCount):
-        x = 200 + i * 50
+        x = 350 + i * 50
         scrn.blit(blankCard, (x, 425))
 
     for event in pygame.event.get():    
