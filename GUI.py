@@ -95,7 +95,7 @@ def setup_screen():
                     elif ":" in name1 or ":" in name2:
                         error = "Names cannot contain a colon (:)."
                     else:
-                        return {name1: 10, name2: 10}
+                        return {name1: 100, name2: 100}
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_TAB:
                     active = (active + 1) % 2
@@ -202,25 +202,16 @@ def settle_round():
     return "Tie"
 
 def displaycard(x, card = None):
-    if card is None:
+    if card == None:
         scrn.blit(backcard, (x, 425))
-        return
-
-    card_images = {
-        "s": spadecard,
-        "d": diamondcard,
-        "c": clubcard,
-        "h": heartcard,
-    }
-    card_image = card_images.get(card[0], backcard)
-    scrn.blit(card_image, (x, 425))
-
-    rank = card[1:]
-    if rank:
-        rank_color = (255, 0, 0) if card[0] in {"h", "d"} else (0, 0, 0)
-        rank_font = pygame.font.SysFont(None, 26)
-        rank_surface = rank_font.render(rank, True, rank_color)
-        scrn.blit(rank_surface, (x + 10, 435))
+    elif card[0] == "s":
+        scrn.blit(spadecard, (x, 425))
+    elif card[0] == "d":
+        scrn.blit(diamondcard, (x, 425))
+    elif card[0] == "c":
+        scrn.blit(clubcard, (x, 425))
+    elif card[0] == "h":
+        scrn.blit(heartcard, (x, 425))
 
     
 

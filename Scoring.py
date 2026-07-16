@@ -36,8 +36,8 @@ Also keep in mind that player 1 will be the dealer.""")
                 dealer = next_player
                 print(f"{dealer} will be the dealer")
             i += 1
-    session_scores = dict.fromkeys(players, 10)
-    print("Every player has been granted 10 tokens to start")
+    session_scores = dict.fromkeys(players, 100)
+    print("Every player has been granted 100 tokens to start")
     return session_scores
 
 
@@ -85,7 +85,7 @@ def cashout(player, session_scores):
     except KeyError:
         high_scores[player] = session_scores[player]
     write_scores(high_scores)
-    session_scores[player] = 10
+    session_scores[player] = 100
 
 
 # writes the saved highscores into the scores file in order

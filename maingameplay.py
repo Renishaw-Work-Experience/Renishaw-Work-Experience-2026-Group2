@@ -126,7 +126,7 @@ def cashout(player, sessionscores):
     choice = input(f"{player}, would you like to cash out? (y/n): ").lower()
     if choice == "y":
         Scoring.cashout(player, sessionscores)
-        print(f"{player} has cashed out. Their score has been saved and reset to 10.")
+        print(f"{player} has cashed out. Their score has been saved and reset to 100.")
         return True
     else:
         print(f"{player} has chosen not to cash out.")
