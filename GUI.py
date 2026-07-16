@@ -297,6 +297,7 @@ while run:
         hit_button.draw()
         stand_button.draw()
     else:
+        time.sleep(1)
         pygame.draw.rect(scrn, (0, 140, 0), (50, 640, 200, 50))
         draw_text("New Round", 30, (255, 255, 255), 75, 654)
         pygame.draw.rect(scrn, (160, 0, 0), (350, 640, 200, 50))
@@ -306,7 +307,7 @@ while run:
     draw_text(f"{dealer_name} tokens: {session_scores[dealer_name]}", 32, (255, 255, 255), 25, 130)
     draw_text(f"{player_name} tokens: {session_scores[player_name]}", 32, (255, 255, 255), 25, 165)
     draw_text(f"Bets - {dealer_name}: {dealer_wager}, {player_name}: {player_wager}", 30, (255, 255, 255), 25, 205)
-    draw_text(status_text, 36, (255, 255, 255), 25, 600)
+    draw_text(status_text, 36, (255, 255, 255), 230, 600)
 
     pygame.display.update()
 
