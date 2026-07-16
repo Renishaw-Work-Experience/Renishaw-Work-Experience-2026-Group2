@@ -1,7 +1,7 @@
 import random
 import Scoring
 
-# graphics
+
 def drawcard(player):
     card = deck.pop()
     if player == names[0]:
@@ -13,7 +13,7 @@ def drawcard(player):
         print(f"{player} drew: {card}") #networking needed 
     hands[player].append(card)
 
-# Possible graphics for playerscores
+
 def calculateHandValue(hand):
     value = 0
     aces = 0
@@ -30,9 +30,9 @@ def calculateHandValue(hand):
         aces -= 1
     return value
 
-# graphics needed
+
 def displayHands(end=False):
-    for i in range(len(names)): # networking needed
+    for i in range(len(names)): 
         if end:
                 print(f"Dealer's ({names[0]}'s) hand: {hands[names[0]]}")
                 print(f"Dealer's score: {calculateHandValue(hands[names[0]])}")
@@ -55,7 +55,7 @@ def displayHand(player):
         print(f"{player}'s score: {calculateHandValue(hands[player])}")
 
 
-# possible win/lose/push(tie) screen
+
 def determineWinner(player):
     playerScore = calculateHandValue(hands[player])
     dealerScore = calculateHandValue(hands[names[0]])
@@ -71,7 +71,7 @@ def determineWinner(player):
 
 
         
-# cashout button
+
 def cashout(player, sessionscores):
     print(f"{player} now has {sessionscores[player]} tokens.")
     choice = input(f"{player}, would you like to cash out? (y/n): ").lower()
@@ -134,6 +134,7 @@ def init_game():
     nonbust = []
     betamounts, hands = Scoring.wager(sessionscores)
     for name in names: 
+    for name in names: 
         drawcard(name)
         drawcard(name)
 
@@ -144,9 +145,11 @@ while True:
     init_game()
     displayHands()
     for i in reversed(range(len(names))):
+    for i in reversed(range(len(names))):
         displayHand(names[i])
         if i != 0:
             while True:
+                playerChoice = input(f"Would {names[i]} like to hit or stand? (h/s): ").lower() 
                 playerChoice = input(f"Would {names[i]} like to hit or stand? (h/s): ").lower() 
                 if playerChoice == "h":
                     drawcard(names[i])
@@ -163,6 +166,7 @@ while True:
         else:
             while True:
                 dealerChoice = input(f"Dealer ({names[0]}), would you like to hit or stand? (h/s): ").lower() 
+                dealerChoice = input(f"Dealer ({names[0]}), would you like to hit or stand? (h/s): ").lower() 
                 if dealerChoice == "h":
                     drawcard(names[0])
                     calculateHandValue(hands[names[0]])
@@ -172,6 +176,7 @@ while True:
                         print("Dealer busts! All non-bust players win.")
                         for name in nonbust:
                             Scoring.win(name, sessionscores, betamounts)
+                            cashout(name, sessionscores) 
                             cashout(name, sessionscores) 
                         break
                 elif dealerChoice == "s":
