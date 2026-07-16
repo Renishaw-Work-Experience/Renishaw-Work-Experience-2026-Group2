@@ -241,7 +241,7 @@ while run:
 
     for i in range(len(maingameplay.dealerHand)):
         time.sleep(0.2) 
-        x = 30 + i * 50
+        x = 250 - i * 50
         if i == 0 and not dealer_revealed:
             displaycard(x, None)
         else:

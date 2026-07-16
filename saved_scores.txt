@@ -1,5 +1,5 @@
-b:20
+b:105
+a:45
 Kieran:20
-a:19
 John:15
 Hubert:5
