@@ -2,13 +2,14 @@ import pygame
 
 import maingameplay
 import Scoring
+import time
 
 
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption("BlackJack")
 
-scrn = pygame.display.set_mode((600, 800))
+scrn = pygame.display.set_mode((600, 700))
 table_img = pygame.image.load("BlackJack_Table.jpg")
 hitButton = pygame.image.load("hitbuttonred.png").convert_alpha()
 standButton = pygame.image.load("standbuttonred.png").convert_alpha()
@@ -239,6 +240,7 @@ while run:
     scrn.blit(table_img, (0, 200))
 
     for i in range(len(maingameplay.dealerHand)):
+        time.sleep(0.5) 
         x = 30 + i * 50
         if i == 0 and not dealer_revealed:
             displaycard(x, None)
@@ -255,6 +257,7 @@ while run:
 
         if not round_over and hit_button.clicked(event):
             maingameplay.playerHand.append(maingameplay.drawcard("Player"))
+            time.sleep(0.5) 
             displaycard(350 + (len(maingameplay.playerHand) - 1) * 50, maingameplay.playerHand[-1])
             player_total = maingameplay.calculateHandValue(maingameplay.playerHand)
             if player_total > 21:
@@ -269,6 +272,7 @@ while run:
             displaycard(30, maingameplay.dealerHand[0])
             while maingameplay.calculateHandValue(maingameplay.dealerHand) < 17:
                 maingameplay.dealerHand.append(maingameplay.drawcard("Dealer"))
+                time.sleep(0.5)
                 displaycard(30 + (len(maingameplay.dealerHand) - 1) * 50, maingameplay.dealerHand[-1])
             dealer_total = maingameplay.calculateHandValue(maingameplay.dealerHand)
             if dealer_total > 21:
