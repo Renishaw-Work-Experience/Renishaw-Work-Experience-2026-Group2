@@ -10,7 +10,7 @@ pygame.font.init()
 pygame.display.set_caption("BlackJack")
 
 scrn = pygame.display.set_mode((600, 700))
-table_img = pygame.image.load("BlackJack_Table.jpg")
+table_img = pygame.image.load("background.jpg")
 hitButton = pygame.image.load("hitbuttonred.png").convert_alpha()
 standButton = pygame.image.load("standbuttonred.png").convert_alpha()
 blankcard = pygame.image.load("blank card.jpg").convert_alpha()
