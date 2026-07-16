@@ -99,3 +99,4 @@ def write_scores(high_scores):
 def sort_dict_by_value(dict1):
     dict1 = {k: v for k, v in sorted(dict1.items(), key=lambda item: item[1], reverse=True)}
     return dict1
+    return dict1

@@ -71,7 +71,6 @@ def drawcard(player):
         return card
     elif player == "Player":
         card = deck.pop()
-        print(f"{names[1]} drew: {card}")
         return card
 
 
