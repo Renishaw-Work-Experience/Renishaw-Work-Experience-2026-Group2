@@ -60,10 +60,13 @@ def determineWinner(player):
     playerScore = calculateHandValue(hands[player])
     dealerScore = calculateHandValue(hands[names[0]])
     if playerScore > dealerScore:
+        print(f"{player} wins")
         Scoring.win(player, sessionscores, betamounts)              
     elif playerScore == dealerScore:
         print("It's a push")    
         Scoring.push(player, sessionscores, betamounts)
+    else:
+        print(f"{player} loses")
     cashout(player, sessionscores)
 
 
@@ -83,15 +86,9 @@ def cashout(player, sessionscores):
         print(f"{player} cannot cash out with less than 10 tokens.")
         return False
 
-
-
-
-
-# main game loop
-sessionscores = Scoring.set_players()
-names = list(sessionscores.keys())
-while True:
+def init_game():
     print('A new game will now begin\n')
+    global deck, nonbust, betamounts, hands
     deck = [
     "s2",
     "s3",
@@ -132,31 +129,25 @@ while True:
     "cq",
     "ck",
     "ca",
-    "d2",
-    "d3",
-    "d4",
-    "d5",
-    "d6",
-    "d7",
-    "d8",
-    "d9",
-    "d10",
-    "dj",
-    "dq",
-    "dk",
-    "da",]
+    "d2",]
     random.shuffle(deck)   
     nonbust = []
     betamounts, hands = Scoring.wager(sessionscores)
-    for name in names: #networking needed
+    for name in names: 
         drawcard(name)
         drawcard(name)
+
+# main game loop
+sessionscores = Scoring.set_players()
+names = list(sessionscores.keys())
+while True:
+    init_game()
     displayHands()
-    for i in reversed(range(len(names))): #networking needed again
+    for i in reversed(range(len(names))):
         displayHand(names[i])
         if i != 0:
             while True:
-                playerChoice = input(f"Would {names[i]} like to hit or stand? (h/s): ").lower() #button needed to replace choice
+                playerChoice = input(f"Would {names[i]} like to hit or stand? (h/s): ").lower() 
                 if playerChoice == "h":
                     drawcard(names[i])
                     displayHand(names[i])
@@ -171,7 +162,7 @@ while True:
                     break
         else:
             while True:
-                dealerChoice = input(f"Dealer ({names[0]}), would you like to hit or stand? (h/s): ").lower() #button needed to replace choice
+                dealerChoice = input(f"Dealer ({names[0]}), would you like to hit or stand? (h/s): ").lower() 
                 if dealerChoice == "h":
                     drawcard(names[0])
                     calculateHandValue(hands[names[0]])
@@ -181,11 +172,9 @@ while True:
                         print("Dealer busts! All non-bust players win.")
                         for name in nonbust:
                             Scoring.win(name, sessionscores, betamounts)
-                            cashout(name, sessionscores) #networking needed here as well
+                            cashout(name, sessionscores) 
                         break
                 elif dealerChoice == "s":
                     print("Dealer chose to stand.")
                     displayHands(True)
                     break
-
-# Where not specified all print statements should be displayed on every computer and then extra data transfer/specific displays where mentioned
