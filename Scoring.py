@@ -1,6 +1,6 @@
 import random
-# Idk if we should have logins and passwords or not
-# these 2 functions work together to get a set of names to play the game
+
+
 def player_count_input():
     while True:
         try:
@@ -42,7 +42,7 @@ Also keep in mind that player 1 will be the dealer.""")
     return session_scores
 
 
-# Reads from file and creates 2 dictionaries for highscores and a changing one for current score
+
 def read_scores():
     with open("saved_scores.txt", "r") as f:
         high_scores = {}
@@ -52,8 +52,6 @@ def read_scores():
     return high_scores
 
 
-# Idk if we should have something for every player to indivually bet or just iterate through
-# every player but I did the individual one
 def wager(session_scores):
     names = list(session_scores.keys())
     playernames = names.copy()
@@ -76,7 +74,7 @@ def wager(session_scores):
                         names.remove(player)
                         if len(playernames) == 0:
                             cashout(names[0], session_scores)
-                            exit('Too many people died, the last player has cashed out')
+                            exit('Everyone ran out of tokens')
                 else:
                     session_scores[player] -= bet_amounts[player]
                     session_scores[names[0]] += bet_amounts[player]
@@ -89,7 +87,7 @@ def wager(session_scores):
     return bet_amounts, hands
 
 
-# adds bet_amount*2 to the player's score
+
 def win(player, session_scores, bet_amounts):
     names = list(session_scores.keys())
     session_scores[player] += bet_amounts[player] * 2
@@ -104,7 +102,6 @@ def push(player, session_scores, bet_amounts):
 
 
 
-# sets session score to be saved as a current score - could code an input for the cashout
 def cashout(player, session_scores):
     high_scores = read_scores()
     try:
@@ -116,7 +113,7 @@ def cashout(player, session_scores):
     session_scores[player] = 10
 
 
-# writes the saved highscores into the scores file in order
+
 def write_scores(high_scores):
     sorted_scores = sort_dict_by_value(high_scores).items()
     with open("saved_scores.txt", "w") as f:
@@ -125,11 +122,5 @@ def write_scores(high_scores):
 
 
 def sort_dict_by_value(dict1):
-    list1 = []
-    for key, val in dict1.items():
-        list1.append((val, key))
-    list1.sort()
-    dict2 = {}
-    for val, key in list1:
-        dict2[key] = val
-    return dict2
+    dict1 = {k: v for k, v in sorted(dict1.items(), key=lambda item: item[1], reverse=True)}
+    return dict1
