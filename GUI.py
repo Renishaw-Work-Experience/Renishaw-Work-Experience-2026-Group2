@@ -231,6 +231,7 @@ round_over = False
 status_text = "Hit or stand"
 dealer_revealed = False
 run = True
+cooldown = 0
 
 hit_button = Button(50, 600, hitButton, 0.2)
 stand_button = Button(450, 600, standButton, 0.2)
@@ -251,11 +252,15 @@ while run:
         x = 350 + i * 50
         displaycard(x, maingameplay.playerHand[i])
 
+    if cooldown > 0:
+        cooldown -= 1
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
-        if not round_over and hit_button.clicked(event):
+        if cooldown == 0 and not round_over and hit_button.clicked(event):
+            cooldown = 8
             maingameplay.playerHand.append(maingameplay.drawcard("Player"))
             time.sleep(0.2) 
             displaycard(350 + (len(maingameplay.playerHand) - 1) * 50, maingameplay.playerHand[-1])
@@ -266,7 +271,8 @@ while run:
                 status_text = f"{player_name} busts - {dealer_name} wins"
                 round_over = True
 
-        if not round_over and stand_button.clicked(event):
+        if cooldown == 0 and not round_over and stand_button.clicked(event):
+            cooldown = 8
             dealer_revealed = True
             draw_text(f"Dealer ({dealer_name}) total: {maingameplay.calculateHandValue(maingameplay.dealerHand)}", 32, (255, 255, 255), 25, 40)
             displaycard(30, maingameplay.dealerHand[0])
