@@ -12,8 +12,19 @@ scrn = pygame.display.set_mode((600, 800))
 table_img = pygame.image.load("BlackJack_Table.jpg")
 hitButton = pygame.image.load("hitbuttonred.png").convert_alpha()
 standButton = pygame.image.load("standbuttonred.png").convert_alpha()
-blankCard = pygame.image.load("blank card.jpg").convert_alpha()
-blankCard = pygame.transform.scale(blankCard, (int(blankCard.get_width() * 0.2), int(blankCard.get_height() * 0.2)))
+blankcard = pygame.image.load("blank card.jpg").convert_alpha()
+blankcard = pygame.transform.scale(blankcard, (int(blankcard.get_width() * 0.2), int(blankcard.get_height() * 0.2)))
+backcard = pygame.image.load("back card.jpg").convert_alpha()
+backcard = pygame.transform.scale(backcard, (int(backcard.get_width() * 0.2), int(backcard.get_height() * 0.2)))
+spadecard = pygame.image.load("spade card.jpg").convert_alpha()
+spadecard = pygame.transform.scale(spadecard, (int(spadecard.get_width() * 0.2), int(spadecard.get_height() * 0.2)))
+diamondcard = pygame.image.load("diamond card.jpg").convert_alpha()
+diamondcard = pygame.transform.scale(diamondcard, (int(diamondcard.get_width() * 0.2), int(diamondcard.get_height() * 0.2)))
+clubcard = pygame.image.load("club card.jpg").convert_alpha()
+clubcard = pygame.transform.scale(clubcard, (int(clubcard.get_width() * 0.2), int(clubcard.get_height() * 0.2)))
+heartcard = pygame.image.load("heart card.jpg").convert_alpha()
+heartcard = pygame.transform.scale(heartcard, (int(heartcard.get_width() * 0.2), int(heartcard.get_height() * 0.2)))
+
 
 
 class Button:
@@ -168,11 +179,13 @@ def wager_screen(dealer_name, player_name, session_scores):
 
 
 def start_round():
+    global dealer_revealed
     maingameplay.init_game()
     maingameplay.playerHand.append(maingameplay.drawcard("Player"))
     maingameplay.playerHand.append(maingameplay.drawcard("Player"))
     maingameplay.dealerHand.append(maingameplay.drawcard("Dealer"))
     maingameplay.dealerHand.append(maingameplay.drawcard("Dealer"))
+    dealer_revealed = False
 
 
 def settle_round():
@@ -187,6 +200,19 @@ def settle_round():
         return f"{dealer_name} wins"
     return "Tie"
 
+def displaycard(x, card = None):
+    if card == None:
+        scrn.blit(backcard, (x, 425))
+    elif card[0] == "s":
+        scrn.blit(spadecard, (x, 425))
+    elif card[0] == "d":
+        scrn.blit(diamondcard, (x, 425))
+    elif card[0] == "c":
+        scrn.blit(clubcard, (x, 425))
+    elif card[0] == "h":
+        scrn.blit(heartcard, (x, 425))
+
+    
 
 session_scores = setup_screen()
 players = list(session_scores.keys())
@@ -202,6 +228,7 @@ start_round()
 
 round_over = False
 status_text = "Hit or stand"
+dealer_revealed = False
 run = True
 
 hit_button = Button(50, 600, hitButton, 0.2)
@@ -213,10 +240,14 @@ while run:
 
     for i in range(len(maingameplay.dealerHand)):
         x = 30 + i * 50
-        scrn.blit(blankCard, (x, 425))
+        if i == 0 and not dealer_revealed:
+            displaycard(x, None)
+        else:
+            displaycard(x, maingameplay.dealerHand[i])
+
     for i in range(len(maingameplay.playerHand)):
         x = 350 + i * 50
-        scrn.blit(blankCard, (x, 425))
+        displaycard(x, maingameplay.playerHand[i])
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -224,15 +255,21 @@ while run:
 
         if not round_over and hit_button.clicked(event):
             maingameplay.playerHand.append(maingameplay.drawcard("Player"))
+            displaycard(350 + (len(maingameplay.playerHand) - 1) * 50, maingameplay.playerHand[-1])
             player_total = maingameplay.calculateHandValue(maingameplay.playerHand)
             if player_total > 21:
+                dealer_revealed = True
                 Scoring.win(dealer_name, session_scores, dealer_wager)
                 status_text = f"{player_name} busts - {dealer_name} wins"
                 round_over = True
 
         if not round_over and stand_button.clicked(event):
+            dealer_revealed = True
+            draw_text(f"Dealer ({dealer_name}) total: {maingameplay.calculateHandValue(maingameplay.dealerHand)}", 32, (255, 255, 255), 25, 40)
+            displaycard(30, maingameplay.dealerHand[0])
             while maingameplay.calculateHandValue(maingameplay.dealerHand) < 17:
                 maingameplay.dealerHand.append(maingameplay.drawcard("Dealer"))
+                displaycard(30 + (len(maingameplay.dealerHand) - 1) * 50, maingameplay.dealerHand[-1])
             dealer_total = maingameplay.calculateHandValue(maingameplay.dealerHand)
             if dealer_total > 21:
                 Scoring.win(player_name, session_scores, player_wager)
@@ -260,8 +297,7 @@ while run:
         draw_text("New Round", 30, (255, 255, 255), 75, 754)
         pygame.draw.rect(scrn, (160, 0, 0), (350, 740, 200, 50))
         draw_text("Save & Exit", 30, (255, 255, 255), 373, 754)
-
-    draw_text(f"Dealer ({dealer_name}) total: {maingameplay.calculateHandValue(maingameplay.dealerHand)}", 32, (255, 255, 255), 25, 40)
+        
     draw_text(f"{player_name} total: {maingameplay.calculateHandValue(maingameplay.playerHand)}", 38, (255, 255, 255), 25, 85)
     draw_text(f"{dealer_name} tokens: {session_scores[dealer_name]}", 32, (255, 255, 255), 25, 130)
     draw_text(f"{player_name} tokens: {session_scores[player_name]}", 32, (255, 255, 255), 25, 165)
