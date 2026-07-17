@@ -73,8 +73,14 @@ def setup_screen():
         if error:
             draw_text(error, 26, (255, 80, 80), 50, 540)
 
-        pygame.draw.rect(scrn, (0, 160, 0), (190, 590, 220, 55))
-        draw_text("Start Game", 32, (255, 255, 255), 215, 605)
+        leaderboard = sorted(high_scores.items(), key=lambda item: item[1], reverse=True)[:3]
+        draw_text("Top 3 players", 26, (255, 220, 0), 50, 565)
+        for i, (name, score) in enumerate(leaderboard):
+            y_pos = 595 + i * 28
+            draw_text(f"{i + 1}. {name} - {score}", 24, (255, 255, 255), 70, y_pos)
+
+        pygame.draw.rect(scrn, (0, 160, 0), (190, 630, 220, 55))
+        draw_text("Start Game", 32, (255, 255, 255), 215, 645)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -85,7 +91,7 @@ def setup_screen():
                     y = 200 + i * 150
                     if pygame.Rect(50, y + 38, 500, 42).collidepoint(event.pos):
                         active = i
-                if pygame.Rect(190, 590, 220, 55).collidepoint(event.pos):
+                if pygame.Rect(190, 630, 220, 55).collidepoint(event.pos):
                     name1, name2 = inputs[0].strip(), inputs[1].strip()
                     if not name1 or not name2:
                         error = "Both names are required."
