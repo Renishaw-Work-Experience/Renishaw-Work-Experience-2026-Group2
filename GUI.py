@@ -1,5 +1,4 @@
 import pygame
-
 import maingameplay
 import Scoring
 import time
@@ -202,16 +201,26 @@ def settle_round():
     return "Tie"
 
 def displaycard(x, card = None):
+    colour = None
     if card == None:
         scrn.blit(backcard, (x, 425))
     elif card[0] == "s":
         scrn.blit(spadecard, (x, 425))
+        colour = (0, 0, 0)
     elif card[0] == "d":
         scrn.blit(diamondcard, (x, 425))
+        colour = (160, 0, 0)
     elif card[0] == "c":
         scrn.blit(clubcard, (x, 425))
+        colour = (0, 0, 0)
     elif card[0] == "h":
         scrn.blit(heartcard, (x, 425))
+        colour = (160, 0, 0)
+    
+    # Display card value on top of the card
+    if card is not None:
+        card_value = card[1:]  # Extract the value (e.g., "10", "A", "K")
+        draw_text(card_value, 20, colour, x + 20, 455)
 
     
 
@@ -240,7 +249,6 @@ while run:
     scrn.blit(table_img, (0, 200))
 
     for i in range(len(maingameplay.dealerHand)):
-        time.sleep(0.2) 
         x = 250 - i * 50
         if i == 0 and not dealer_revealed:
             displaycard(x, None)
@@ -259,7 +267,6 @@ while run:
 
         if not round_over and hit_button.clicked(event):
             maingameplay.playerHand.append(maingameplay.drawcard("Player"))
-            time.sleep(0.2) 
             displaycard(350 + (len(maingameplay.playerHand) - 1) * 50, maingameplay.playerHand[-1])
             player_total = maingameplay.calculateHandValue(maingameplay.playerHand)
             if player_total > 21:
@@ -274,7 +281,6 @@ while run:
             displaycard(30, maingameplay.dealerHand[0])
             while maingameplay.calculateHandValue(maingameplay.dealerHand) < 17:
                 maingameplay.dealerHand.append(maingameplay.drawcard("Dealer"))
-                time.sleep(0.2)
                 displaycard(30 + (len(maingameplay.dealerHand) - 1) * 50, maingameplay.dealerHand[-1])
             dealer_total = maingameplay.calculateHandValue(maingameplay.dealerHand)
             if dealer_total > 21:
@@ -285,12 +291,12 @@ while run:
             round_over = True
 
         if round_over and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if pygame.Rect(50, 640, 200, 50).collidepoint(event.pos):
+            if pygame.Rect(350, 20, 220, 50).collidepoint(event.pos):
                 dealer_wager, player_wager = wager_screen(dealer_name, player_name, session_scores)
                 start_round()
                 round_over = False
                 status_text = "Hit or stand"
-            if pygame.Rect(350, 640, 200, 50).collidepoint(event.pos):
+            if pygame.Rect(350, 80, 220, 50).collidepoint(event.pos):
                 Scoring.cashout(dealer_name, session_scores)
                 Scoring.cashout(player_name, session_scores)
                 run = False
@@ -299,11 +305,10 @@ while run:
         hit_button.draw()
         stand_button.draw()
     else:
-        time.sleep(1)
-        pygame.draw.rect(scrn, (0, 140, 0), (50, 640, 200, 50))
-        draw_text("New Round", 30, (255, 255, 255), 75, 654)
-        pygame.draw.rect(scrn, (160, 0, 0), (350, 640, 200, 50))
-        draw_text("Save & Exit", 30, (255, 255, 255), 373, 654)
+        pygame.draw.rect(scrn, (0, 140, 0), (350, 20, 220, 50))
+        draw_text("New Round", 30, (255, 255, 255), 365, 32)
+        pygame.draw.rect(scrn, (160, 0, 0), (350, 80, 220, 50))
+        draw_text("Save & Exit", 30, (255, 255, 255), 363, 92)
         
     draw_text(f"{player_name} total: {maingameplay.calculateHandValue(maingameplay.playerHand)}", 38, (255, 255, 255), 25, 85)
     draw_text(f"{dealer_name} tokens: {session_scores[dealer_name]}", 32, (255, 255, 255), 25, 130)

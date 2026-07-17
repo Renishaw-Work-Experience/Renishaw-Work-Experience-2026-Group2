@@ -1,5 +1,1 @@
-b:105
-a:45
-Kieran:20
-John:15
-Hubert:5
+
